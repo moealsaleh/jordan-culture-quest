@@ -329,6 +329,17 @@
         }
       }
 
+
+      /* === PATCH: category opening should land at the beginning/top === */
+      #category-page-top {
+        scroll-margin-top: 150px !important;
+      }
+      @media (max-width: 760px) {
+        #category-page-top {
+          scroll-margin-top: 215px !important;
+        }
+      }
+
     </style>
   </head>
   <body>
@@ -450,6 +461,7 @@
             result: null,
           });
           render();
+          scrollToCategoryTop();
           pushAppHistory();
         };
 
@@ -490,7 +502,16 @@
           });
           render();
           pushAppHistory();
+          scrollToCategoryTop();
         };
+
+        function scrollToCategoryTop() {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+            });
+          });
+        }
 
         function scrollToItemExplanation() {
           requestAnimationFrame(() => {
@@ -606,6 +627,7 @@
           state.screen = "question";
           render();
           pushAppHistory();
+          scrollToCategoryTop();
         };
 
         window.selectOption = function (i) {
@@ -632,6 +654,7 @@
           state.screen = "result";
           render();
           pushAppHistory();
+          scrollToCategoryTop();
         };
 
         window.stopVoice = stopVoice;
@@ -722,7 +745,7 @@
           const sourceNames = item.sourceIds
             .map((id) => DATA.sources[id]?.name || id)
             .join(" · ");
-          return `<main>
+          return `<main id="category-page-top">
       <section class="section-head">
         <div><h2>${cat.icon} ${L(cat.title)}</h2><p>${L(cat.intro)}</p></div>
       </section>
