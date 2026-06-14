@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Jordan Culture Quest | رحلة الثقافة الأردنية</title>
+    <meta
+      name="description"
+      content="Bilingual Jordan booth competition with clickable Jordan map, Arabic/English content, voice narration, MCQ questions, and celebration effects."
+    />
+    <meta name="theme-color" content="#CE1126" />
+    <link rel="stylesheet" href="styles.css" />
+
+    <style>
+      .item-feature.food-feature {
+        grid-template-columns: minmax(220px, 310px) 1fr !important;
+        align-items: center !important;
+      }
+      .food-photo {
+        width: 100% !important;
+        height: 220px !important;
+        object-fit: cover !important;
+        border-radius: 24px !important;
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.14) !important;
+        background: #f2e4cf !important;
+      }
+
+      .food-photo[src$="mansaf.png"] {
+        object-fit: contain !important;
+        object-position: center center !important;
+        background: #ffffff !important;
+        padding: 8px !important;
+        height: 260px !important;
+      }
+      .food-photo-fallback {
+        display: none !important;
+      }
+      @media (max-width: 760px) {
+        .item-feature.food-feature {
+          grid-template-columns: 1fr !important;
+        }
+        .food-photo {
+          height: 230px !important;
+        }
+      }
+
+      .item-feature.royal-feature {
+        grid-template-columns: minmax(180px, 260px) 1fr !important;
+        align-items: center !important;
+      }
+      .item-feature.royal-feature .food-photo {
+        width: 100% !important;
+        height: 270px !important;
+        object-fit: cover !important;
+        object-position: center top !important;
+        border-radius: 24px !important;
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.14) !important;
+        background: #f2e4cf !important;
+      }
+      .item-feature.royal-feature .food-photo-fallback {
+        display: none !important;
+      }
+      @media (max-width: 760px) {
+        .item-feature.royal-feature {
+          grid-template-columns: 1fr !important;
+        }
+        .item-feature.royal-feature .food-photo {
+          height: 320px !important;
+        }
+      }
+
+      .item-feature.places-feature {
+        grid-template-columns: minmax(220px, 330px) 1fr !important;
+        align-items: center !important;
+      }
+      .item-feature.places-feature .food-photo {
+        width: 100% !important;
+        height: 240px !important;
+        object-fit: cover !important;
+        object-position: center center !important;
+        border-radius: 24px !important;
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.14) !important;
+        background: #f2e4cf !important;
+      }
+      .item-feature.places-feature .food-photo-fallback {
+        display: none !important;
+      }
+      @media (max-width: 760px) {
+        .item-feature.places-feature {
+          grid-template-columns: 1fr !important;
+        }
+        .item-feature.places-feature .food-photo {
+          height: 260px !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      window.APP_DATA = {"sources":{"user_map":{"name":"User-provided Jordan governorate map image","url":"local asset: assets/jordan-map-original-user.png","type":"user-provided booth asset","note":"Used as the base map image. English labels are removed in the clean map and replaced by interactive localized labels."},"visit_jordan":{"name":"Visit Jordan / Jordan Tourism Board","url":"https://international.visitjordan.com/","type":"official tourism","note":"Official Jordan tourism source."},"visit_jerash":{"name":"Visit Jordan - Jerash","url":"https://international.visitjordan.com/wheretogo/jerash/","type":"official tourism","note":"Official tourism page for Jerash."},"visit_amman":{"name":"Visit Jordan - Amman","url":"https://international.visitjordan.com/wheretogo/amman/","type":"official tourism","note":"Official tourism page for Amman."},"visit_madaba":{"name":"Visit Jordan - Madaba","url":"https://international.visitjordan.com/wheretogo/madaba/","type":"official tourism","note":"Official tourism page for Madaba, known as the City of Mosaics."},"visit_salt":{"name":"Visit Jordan - As-Salt","url":"https://international.visitjordan.com/wheretogo/as-salt/","type":"official tourism","note":"Official tourism page for As-Salt."},"unesco_salt":{"name":"UNESCO - As-Salt","url":"https://whc.unesco.org/en/list/689/","type":"UNESCO","note":"UNESCO World Heritage page for As-Salt, the Place of Tolerance and Urban Hospitality."},"visit_karak":{"name":"Visit Jordan - Karak","url":"https://international.visitjordan.com/wheretogo/karak/","type":"official tourism","note":"Official tourism page for Karak."},"visit_aqaba":{"name":"Visit Jordan - Aqaba","url":"https://international.visitjordan.com/wheretogo/aqaba/","type":"official tourism","note":"Official tourism page for Aqaba."},"visit_petra":{"name":"Visit Jordan - Petra","url":"https://international.visitjordan.com/wheretogo/petra/","type":"official tourism","note":"Official tourism page for Petra."},"visit_ummqais":{"name":"Visit Jordan - Umm Qais","url":"https://international.visitjordan.com/wheretogo/umm-qais/","type":"official tourism","note":"Official tourism page for Umm Qais / ancient Gadara."},"visit_unesco":{"name":"Visit Jordan - UNESCO Sites","url":"https://international.visitjordan.com/unesco/","type":"official tourism","note":"Official tourism page describing UNESCO-recognized sites including Petra and Wadi Rum."},"whc_jordan":{"name":"UNESCO World Heritage Centre - Jordan","url":"https://whc.unesco.org/en/statesparties/jo","type":"UNESCO","note":"UNESCO list of World Heritage properties in Jordan."},"visit_food":{"name":"Visit Jordan - Feasting in Jordan","url":"https://international.visitjordan.com/page/13/feasting-in-jordan/","type":"official tourism","note":"Official tourism page describing Jordanian food such as Mansaf and Zarb."},"edu_food":{"name":"Educational Travel Jordan - Food and Drinks","url":"https://edutravel.visitjordan.com/en/page/79/Food-and-Drinks","type":"official tourism/education","note":"Official page listing Mansaf, Maqluba, Knafeh, Zarb, and stating Falafel and Hummus are a breakfast of choice."},"kraiza_reference":{"name":"Chef in Disguise - Kraiza semolina pudding","url":"https://chefindisguise.com/2016/10/25/semolina-pudding-kraiza/","type":"traditional recipe reference","note":"Used only for Krayza/Kraiza because it was requested by the booth owner; spelling should be reviewed locally."},"monarchs_official":{"name":"Crown Prince Al Hussein Official Website - Hashemite Monarchs","url":"https://www.alhussein.jo/en/the-hashemites/history-hashemites","type":"official royal","note":"Official list/history of Hashemite monarchs."},"rhc_monarchs":{"name":"Royal Hashemite Court - Hashemite Monarchs","url":"https://rhc.jo/en/hashemite-monarchs-2","type":"official royal","note":"Official Royal Hashemite Court page on Hashemite monarchs."},"king_abdullah_i":{"name":"King Abdullah II Official Website - King Abdullah I","url":"https://kingabdullah.jo/en/page/king-abdullah-bin-al-hussein-1882-1951","type":"official royal","note":"Official historical page for King Abdullah I; includes independence context."},"king_abdullah_ii":{"name":"King Abdullah II Official Website - About the King","url":"https://kingabdullah.jo/en/about-the-king","type":"official royal","note":"Official biography of His Majesty King Abdullah II, including marriage and children."},"crown_prince":{"name":"Crown Prince Al Hussein Official Website","url":"https://www.alhussein.jo/en","type":"official royal","note":"Official Crown Prince website; states he is the eldest son of King Abdullah II and Queen Rania."},"queen_noor":{"name":"King Hussein Foundation - Her Majesty Queen Noor","url":"https://www.kinghusseinfoundation.org/en/Home/Her-Majesty-Queen-Noor","type":"official foundation","note":"Official foundation biography of Queen Noor; states she married King Hussein in 1978."},"population_2025":{"name":"Jordan Demographic Indicators Sheet July 2025","url":"https://hpc.org.jo/sites/default/files/jordan_demographic_indicators_sheet_july._2025.pdf","type":"official/statistical sheet","note":"Reports current population size as 11.85 million in July 2025."},"flag_info":{"name":"Jordan Armed Forces - Flag of Jordan","url":"https://www.jaf.mil.jo/ContentstemplateC/Flag_of_the_Hashemite_Kingdom_of_Jordan.aspx","type":"official government/military","note":"Describes the Jordanian flag colors and seven-pointed star."},"flag_day":{"name":"Royal Hashemite Court - Jordan Flag Day Ceremony","url":"https://rhc.jo/en/news/king-attends-jordan-flag-day-ceremony-2","type":"official royal","note":"Official news page for Jordan Flag Day ceremony on 16 April."}},"categories":[{"id":"cities","icon":"🗺️","title":{"en":"Governorates & Cities","ar":"المحافظات والمدن"},"intro":{"en":"Choose directly from the Jordan map. The list follows the governorates displayed on the provided map.","ar":"اختر مباشرة من خريطة الأردن. تتبع القائمة المحافظات الظاهرة على الخريطة المرفقة."},"items":[{"id":"irbid","name":{"en":"Irbid","ar":"إربد"},"mapLabel":{"en":"IRBID","ar":"إربد"},"x":36.2,"y":19.6,"icon":"🌿","sourceIds":["user_map","visit_jordan"],"text":{"en":"Irbid is one of the northern governorates shown on the map. It is an important northern Jordanian center linked with universities, agriculture, and the green landscapes of north Jordan.","ar":"إربد من محافظات الشمال الظاهرة على الخريطة. وهي مركز أردني شمالي مهم يرتبط بالجامعات والزراعة وطبيعة شمال الأردن الخضراء."},"question":{"en":"Which governorate appears at the northern part of the map and is linked here with north Jordan?","ar":"أي محافظة تظهر في شمال الخريطة وترتبط هنا بشمال الأردن؟"},"options":[{"en":"Aqaba","ar":"العقبة"},{"en":"Irbid","ar":"إربد"},{"en":"Ma'an","ar":"معان"},{"en":"Karak","ar":"الكرك"}],"correctIndex":1,"zone":{"x":36,"y":18.9,"w":7.5,"h":8.5},"fact":{"en":"a northern Jordanian center linked with universities, agriculture, and green northern landscapes","ar":"مركز شمالي يرتبط بالجامعات والزراعة وطبيعة الشمال الخضراء"}},{"id":"ajloun","name":{"en":"Ajloun","ar":"عجلون"},"mapLabel":{"en":"AJLOUN","ar":"عجلون"},"x":35.5,"y":26.4,"icon":"🌲","sourceIds":["user_map","visit_jordan"],"text":{"en":"Ajloun is a northern governorate known for highland scenery, forests, and historic landscapes. It helps show that Jordan is not only desert.","ar":"عجلون محافظة شمالية تشتهر بالطبيعة الجبلية والغابات والمشهد التاريخي، وتُظهر أن الأردن ليس صحراء فقط."},"question":{"en":"Which governorate helps show Jordan's green highland side?","ar":"أي محافظة تُظهر جانب المرتفعات الخضراء في الأردن؟"},"options":[{"en":"Ma'an","ar":"معان"},{"en":"Aqaba","ar":"العقبة"},{"en":"Ajloun","ar":"عجلون"},{"en":"Zarqa","ar":"الزرقاء"}],"correctIndex":2,"zone":{"x":35.2,"y":26,"w":6.8,"h":5.8},"fact":{"en":"a northern highland area known for forests and green scenery","ar":"منطقة جبلية شمالية تشتهر بالغابات والطبيعة الخضراء"}},{"id":"jerash","name":{"en":"Jerash","ar":"جرش"},"mapLabel":{"en":"JERASH","ar":"جرش"},"x":38.1,"y":29.2,"icon":"🏛️","sourceIds":["user_map","visit_jerash"],"text":{"en":"Jerash is famous for Roman-era heritage, including colonnaded streets, plazas, theaters, and monumental arches.","ar":"تشتهر جرش بتراثها من العصر الروماني، ومنها الشوارع ذات الأعمدة والساحات والمدرجات والأقواس الضخمة."},"question":{"en":"Which governorate/city is famous for Roman-era ruins?","ar":"أي محافظة/مدينة تشتهر بالآثار الرومانية؟"},"options":[{"en":"Jerash","ar":"جرش"},{"en":"Aqaba","ar":"العقبة"},{"en":"Mafraq","ar":"المفرق"},{"en":"Tafilah","ar":"الطفيلة"}],"correctIndex":0,"zone":{"x":38.2,"y":28.5,"w":8,"h":6},"fact":{"en":"Roman-era heritage such as colonnaded streets, plazas, theaters, and arches","ar":"تراث روماني مثل الشوارع ذات الأعمدة والساحات والمدرجات والأقواس"}},{"id":"balqa","name":{"en":"Al Balqa","ar":"البلقاء"},"mapLabel":{"en":"AL BALQA","ar":"البلقاء"},"x":35.2,"y":33.6,"icon":"🏘️","sourceIds":["user_map","visit_salt","unesco_salt"],"text":{"en":"Al Balqa is associated with Salt, a historic hill city recognized for tolerance, urban hospitality, and yellow-stone architecture.","ar":"ترتبط البلقاء بمدينة السلط التاريخية على التلال، المعروفة بالتسامح والضيافة الحضرية والعمارة الحجرية الصفراء."},"question":{"en":"Which governorate is associated here with Salt and urban hospitality?","ar":"أي محافظة ترتبط هنا بالسلط والضيافة الحضرية؟"},"options":[{"en":"Al Mafraq","ar":"المفرق"},{"en":"Al Balqa","ar":"البلقاء"},{"en":"Aqaba","ar":"العقبة"},{"en":"Ma'an","ar":"معان"}],"correctIndex":1,"zone":{"x":34.6,"y":34,"w":8.4,"h":10},"fact":{"en":"Salt, tolerance, urban hospitality, and yellow-stone architecture","ar":"السلط والتسامح والضيافة الحضرية والعمارة الحجرية الصفراء"}},{"id":"madaba","name":{"en":"Madaba","ar":"مادبا"},"mapLabel":{"en":"MADABA","ar":"مادبا"},"x":35.6,"y":42,"icon":"🧩","sourceIds":["user_map","visit_madaba"],"text":{"en":"Madaba is widely known as the City of Mosaics and is especially associated with Byzantine and Umayyad mosaic art.","ar":"تُعرف مادبا على نطاق واسع بمدينة الفسيفساء، وترتبط خصوصاً بفنون الفسيفساء البيزنطية والأموية."},"question":{"en":"Which city is widely known as the City of Mosaics?","ar":"أي مدينة تُعرف على نطاق واسع بمدينة الفسيفساء؟"},"options":[{"en":"Karak","ar":"الكرك"},{"en":"Aqaba","ar":"العقبة"},{"en":"Madaba","ar":"مادبا"},{"en":"Irbid","ar":"إربد"}],"correctIndex":2,"zone":{"x":34.8,"y":42,"w":8.4,"h":10},"fact":{"en":"the City of Mosaics and Byzantine and Umayyad mosaic art","ar":"مدينة الفسيفساء وفنون الفسيفساء البيزنطية والأموية"}},{"id":"amman","name":{"en":"Amman","ar":"عمّان"},"mapLabel":{"en":"AMMAN","ar":"عمّان"},"x":42.2,"y":44.8,"icon":"🌆","sourceIds":["user_map","visit_amman"],"text":{"en":"Amman is Jordan's capital, combining the Citadel, downtown markets, museums, modern districts, and everyday city life.","ar":"عمّان عاصمة الأردن، وتجمع بين جبل القلعة وأسواق وسط البلد والمتاحف والأحياء الحديثة والحياة اليومية للمدينة."},"question":{"en":"What is the capital of Jordan?","ar":"ما عاصمة الأردن؟"},"options":[{"en":"Aqaba","ar":"العقبة"},{"en":"Irbid","ar":"إربد"},{"en":"Madaba","ar":"مادبا"},{"en":"Amman","ar":"عمّان"}],"correctIndex":3,"zone":{"x":43.5,"y":44.5,"w":20,"h":15},"fact":{"en":"Jordan’s capital with the Citadel, downtown markets, museums, and modern districts","ar":"عاصمة الأردن وفيها جبل القلعة وأسواق وسط البلد والمتاحف والأحياء الحديثة"}},{"id":"zarqa","name":{"en":"Az Zarqa","ar":"الزرقاء"},"mapLabel":{"en":"AZ ZARQA","ar":"الزرقاء"},"x":50.6,"y":39.2,"icon":"🏭","sourceIds":["user_map","visit_jordan"],"text":{"en":"Az Zarqa is shown east of Amman on the map. It is one of Jordan's central governorates and an important urban and industrial area.","ar":"تظهر الزرقاء شرق عمّان على الخريطة، وهي من محافظات الوسط المهمة ومنطقة حضرية وصناعية بارزة."},"question":{"en":"Which governorate is shown east of Amman on the map?","ar":"أي محافظة تظهر شرق عمّان على الخريطة؟"},"options":[{"en":"Az Zarqa","ar":"الزرقاء"},{"en":"Ajloun","ar":"عجلون"},{"en":"Aqaba","ar":"العقبة"},{"en":"Al Karak","ar":"الكرك"}],"correctIndex":0,"zone":{"x":51.5,"y":39,"w":18.5,"h":11},"fact":{"en":"a central governorate east of Amman and an important urban and industrial area","ar":"محافظة وسطى شرق عمّان ومنطقة حضرية وصناعية مهمة"}},{"id":"mafraq","name":{"en":"Al Mafraq","ar":"المفرق"},"mapLabel":{"en":"AL MAFRAQ","ar":"المفرق"},"x":61.6,"y":22.4,"icon":"🏜️","sourceIds":["user_map","visit_jordan"],"text":{"en":"Al Mafraq is the large northeastern governorate shown on the map. Its position highlights Jordan's wide desert and borderland geography.","ar":"المفرق هي المحافظة الشمالية الشرقية الواسعة الظاهرة على الخريطة، وموقعها يبرز اتساع الجغرافيا الصحراوية والحدودية في الأردن."},"question":{"en":"Which governorate occupies the large northeastern area of the map?","ar":"أي محافظة تشغل المساحة الشمالية الشرقية الكبيرة في الخريطة؟"},"options":[{"en":"Madaba","ar":"مادبا"},{"en":"Al Balqa","ar":"البلقاء"},{"en":"Al Mafraq","ar":"المفرق"},{"en":"Aqaba","ar":"العقبة"}],"correctIndex":2,"zone":{"x":61.5,"y":22,"w":32,"h":26},"fact":{"en":"the large northeastern governorate that highlights Jordan’s desert and borderland geography","ar":"المحافظة الشمالية الشرقية الواسعة التي تبرز جغرافيا الصحراء والحدود"}},{"id":"karak","name":{"en":"Al Karak","ar":"الكرك"},"mapLabel":{"en":"AL KARAK","ar":"الكرك"},"x":35,"y":52.8,"icon":"🏰","sourceIds":["user_map","visit_karak"],"text":{"en":"Al Karak is linked with Karak Castle and the King's Highway, making it an important stop in Jordan's historical landscape.","ar":"ترتبط الكرك بقلعة الكرك وطريق الملوك، مما يجعلها محطة مهمة في المشهد التاريخي الأردني."},"question":{"en":"Which governorate is linked with Karak Castle?","ar":"أي محافظة ترتبط بقلعة الكرك؟"},"options":[{"en":"Al Balqa","ar":"البلقاء"},{"en":"Al Karak","ar":"الكرك"},{"en":"Irbid","ar":"إربد"},{"en":"Az Zarqa","ar":"الزرقاء"}],"correctIndex":1,"zone":{"x":35,"y":53,"w":13,"h":13},"fact":{"en":"Karak Castle and the King’s Highway","ar":"قلعة الكرك وطريق الملوك"}},{"id":"tafilah","name":{"en":"At Tafilah","ar":"الطفيلة"},"mapLabel":{"en":"AT TAFILAH","ar":"الطفيلة"},"x":34.6,"y":61.3,"icon":"⛰️","sourceIds":["user_map","visit_jordan"],"text":{"en":"At Tafilah is a southern highland governorate. In this activity, it represents Jordan's mountain landscapes between Karak and Ma'an.","ar":"الطفيلة محافظة جبلية جنوبية، وتمثل في هذا النشاط المناظر الجبلية الأردنية بين الكرك ومعان."},"question":{"en":"Which governorate is shown between Al Karak and Ma'an on the map?","ar":"أي محافظة تظهر بين الكرك ومعان على الخريطة؟"},"options":[{"en":"At Tafilah","ar":"الطفيلة"},{"en":"Al Mafraq","ar":"المفرق"},{"en":"Irbid","ar":"إربد"},{"en":"Madaba","ar":"مادبا"}],"correctIndex":0,"zone":{"x":34.5,"y":61.5,"w":13,"h":11.5},"fact":{"en":"southern mountain landscapes between Karak and Ma’an","ar":"المناظر الجبلية الجنوبية بين الكرك ومعان"}},{"id":"maan","name":{"en":"Ma'an","ar":"معان"},"mapLabel":{"en":"MA'AN","ar":"معان"},"x":44.2,"y":70.2,"icon":"🛤️","sourceIds":["user_map","visit_petra","visit_unesco"],"text":{"en":"Ma'an is the large southern governorate shown on the map. It connects strongly with southern routes, Petra, and the desert region.","ar":"معان هي المحافظة الجنوبية الواسعة الظاهرة على الخريطة، وترتبط بقوة بطرق الجنوب والبتراء والمنطقة الصحراوية."},"question":{"en":"Which large southern governorate is connected here with Petra and the desert region?","ar":"أي محافظة جنوبية واسعة ترتبط هنا بالبتراء والمنطقة الصحراوية؟"},"options":[{"en":"Irbid","ar":"إربد"},{"en":"Amman","ar":"عمّان"},{"en":"Ma'an","ar":"معان"},{"en":"Jerash","ar":"جرش"}],"correctIndex":2,"zone":{"x":45.5,"y":70.5,"w":30,"h":25},"fact":{"en":"a large southern governorate connected with Petra, southern routes, and the desert region","ar":"محافظة جنوبية واسعة ترتبط بالبتراء وطرق الجنوب والمنطقة الصحراوية"}},{"id":"aqaba","name":{"en":"Aqaba","ar":"العقبة"},"mapLabel":{"en":"AQABA","ar":"العقبة"},"x":30.5,"y":88.8,"icon":"🌊","sourceIds":["user_map","visit_aqaba"],"text":{"en":"Aqaba is Jordan's Red Sea governorate and city, known for beaches, marine life, water activities, and a southern coastal atmosphere.","ar":"العقبة هي محافظة ومدينة الأردن على البحر الأحمر، وتُعرف بالشواطئ والحياة البحرية والأنشطة المائية والأجواء الساحلية الجنوبية."},"question":{"en":"Which governorate gives Jordan its Red Sea coastline?","ar":"أي محافظة تمنح الأردن ساحله على البحر الأحمر؟"},"options":[{"en":"Jerash","ar":"جرش"},{"en":"Aqaba","ar":"العقبة"},{"en":"Al Balqa","ar":"البلقاء"},{"en":"Amman","ar":"عمّان"}],"correctIndex":1,"zone":{"x":30.5,"y":88.5,"w":11,"h":15},"fact":{"en":"Jordan’s Red Sea coastline, beaches, marine life, and water activities","ar":"ساحل الأردن على البحر الأحمر والشواطئ والحياة البحرية والأنشطة المائية"}}],"usesMap":true},{"id":"food","icon":"🍽️","title":{"en":"Food & Breakfast","ar":"الطعام والإفطار"},"intro":{"en":"Explore famous Jordanian dishes, sweets, and breakfast favorites.","ar":"استكشف أطباقاً وحلويات ومأكولات إفطار مشهورة في الأردن."},"items":[{"id":"mansaf","name":{"en":"Mansaf","ar":"المنسف"},"icon":"🍚","sourceIds":["visit_food","edu_food"],"text":{"en":"Mansaf is Jordan's best-known national-pride dish, traditionally served with rice, lamb, and a distinctive jameed yogurt sauce.","ar":"المنسف من أشهر أطباق الفخر الوطني في الأردن، ويُقدّم تقليدياً مع الأرز واللحم وصلصة الجميد المميزة."},"question":{"en":"What gives Mansaf its distinctive sauce?","ar":"ما الذي يمنح المنسف صلصته المميزة؟"},"options":[{"en":"Tomato paste","ar":"معجون الطماطم"},{"en":"Coconut milk","ar":"حليب جوز الهند"},{"en":"Jameed","ar":"الجميد"},{"en":"Soy sauce","ar":"صلصة الصويا"}],"correctIndex":2,"imageUrl":"assets/food/mansaf.png","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Mansaf","ar":"صورة المنسف"},"fact":{"en":"rice, lamb, and jameed yogurt sauce","ar":"الأرز واللحم وصلصة الجميد"}},{"id":"maqlooba","name":{"en":"Maqlooba","ar":"المقلوبة"},"icon":"🥘","sourceIds":["edu_food"],"text":{"en":"Maqlooba means 'upside down'; it is commonly prepared with rice, vegetables, and chicken or meat, then flipped before serving.","ar":"المقلوبة تعني الطبق المقلوب؛ وتُحضّر عادةً من الأرز والخضار والدجاج أو اللحم ثم تُقلب قبل التقديم."},"question":{"en":"Why is Maqlooba called 'upside down'?","ar":"لماذا تسمى المقلوبة بهذا الاسم؟"},"options":[{"en":"Because it is served frozen","ar":"لأنها تُقدّم مجمّدة"},{"en":"Because the pot is flipped before serving","ar":"لأن القدر يُقلب قبل التقديم"},{"en":"Because it has no rice","ar":"لأنها لا تحتوي على أرز"},{"en":"Because it is only a dessert","ar":"لأنها حلوى فقط"}],"correctIndex":1,"imageUrl":"assets/food/maqlooba.png","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Maqlooba","ar":"صورة المقلوبة"},"fact":{"en":"a dish flipped upside down before serving","ar":"طبق يُقلب قبل التقديم"}},{"id":"kunafa","name":{"en":"Kunafa","ar":"الكنافة"},"icon":"🍮","sourceIds":["edu_food"],"text":{"en":"Kunafa is one of the most popular sweets in Jordan and is often served in happy occasions and gatherings.","ar":"الكنافة من أشهر الحلويات في الأردن، وتُقدّم كثيراً في المناسبات السعيدة والتجمعات."},"question":{"en":"Kunafa is best described as what?","ar":"كيف يمكن وصف الكنافة؟"},"options":[{"en":"A desert valley","ar":"وادٍ صحراوي"},{"en":"A Roman city","ar":"مدينة رومانية"},{"en":"A popular sweet","ar":"حلوى مشهورة"},{"en":"A royal title","ar":"لقب ملكي"}],"correctIndex":2,"imageUrl":"assets/food/kunafa.png","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Kunafa","ar":"صورة الكنافة"},"fact":{"en":"a popular sweet served in happy occasions and gatherings","ar":"حلوى مشهورة تُقدّم في المناسبات السعيدة والتجمعات"}},{"id":"baqlawa","name":{"en":"Baqlawa","ar":"البقلاوة"},"icon":"🥮","sourceIds":["edu_food"],"text":{"en":"Baqlawa is a layered pastry sweet enjoyed across Jordan and the region, commonly made with nuts and syrup.","ar":"البقلاوة حلوى من طبقات العجين تُستمتع بها في الأردن والمنطقة، وتُحضّر غالباً بالمكسرات والقطر."},"question":{"en":"Baqlawa is a type of:","ar":"البقلاوة نوع من:"},"options":[{"en":"Layered pastry sweet","ar":"حلوى بطبقات من العجين"},{"en":"Seafood dish","ar":"طبق بحري"},{"en":"Desert castle","ar":"قلعة صحراوية"},{"en":"Football team","ar":"فريق كرة قدم"}],"correctIndex":0,"imageUrl":"assets/food/baqlawa.png","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Baqlawa","ar":"صورة البقلاوة"},"fact":{"en":"a layered pastry sweet commonly made with nuts and syrup","ar":"حلوى من طبقات العجين تُحضّر غالباً بالمكسرات والقطر"}},{"id":"zarb","name":{"en":"Zarb","ar":"الزرب"},"icon":"🔥","sourceIds":["visit_food","edu_food"],"text":{"en":"Zarb is a Bedouin-style dish cooked slowly in an underground oven or pit, strongly associated with desert hospitality.","ar":"الزرب طبق على الطريقة البدوية يُطهى ببطء في فرن أو حفرة تحت الأرض، ويرتبط بقوة بضيافة الصحراء."},"question":{"en":"How is Zarb traditionally cooked?","ar":"كيف يُطهى الزرب تقليدياً؟"},"options":[{"en":"Without heat","ar":"من دون حرارة"},{"en":"Only in a freezer","ar":"في مجمّد فقط"},{"en":"In an underground oven or pit","ar":"في فرن أو حفرة تحت الأرض"},{"en":"In a paper bag","ar":"في كيس ورقي"}],"correctIndex":2,"imageUrl":"assets/food/zarb.png","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Zarb","ar":"صورة الزرب"},"fact":{"en":"a Bedouin-style dish cooked in an underground oven or pit","ar":"طبق بدوي يُطهى في فرن أو حفرة تحت الأرض"}},{"id":"krayza","name":{"en":"Krayza","ar":"الكريزة"},"icon":"🍧","sourceIds":["kraiza_reference"],"text":{"en":"Krayza, also spelled Kraiza/Karaiza, is described in traditional recipe references as a semolina pudding-style sweet. Please review the exact local spelling before printing booth material.","ar":"الكريزة، وتكتب أحياناً Kraiza/Karaiza، تُوصف في مراجع وصفات تقليدية كحلوى شبيهة بمهلبية السميد. يُفضّل مراجعة التهجئة المحلية قبل طباعة مواد الجناح."},"question":{"en":"Krayza is described here as what?","ar":"كيف وُصفت الكريزة هنا؟"},"options":[{"en":"A flag color","ar":"لون في العلم"},{"en":"A semolina pudding-style sweet","ar":"حلوى شبيهة بمهلبية السميد"},{"en":"A Roman theater","ar":"مدرج روماني"},{"en":"A governorate","ar":"محافظة"}],"correctIndex":1,"imageUrl":"assets/food/krayza.jpg","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Krayza","ar":"صورة الكريزة"},"fact":{"en":"a semolina pudding-style sweet","ar":"حلوى شبيهة بمهلبية السميد"}},{"id":"hummus-falafel","name":{"en":"Hummos & Falafel","ar":"الحمص والفلافل"},"icon":"🧆","sourceIds":["edu_food"],"text":{"en":"Hummos and falafel are among the most famous breakfast foods in Jordan; Educational Travel Jordan describes falafel and hummus as a breakfast of choice, especially on Fridays.","ar":"الحمص والفلافل من أشهر أطعمة الإفطار في الأردن؛ وتصف صفحة Educational Travel Jordan الفلافل والحمص بأنهما من اختيارات الإفطار المفضلة، خاصة يوم الجمعة."},"question":{"en":"Which pair is highlighted here as a famous Jordanian breakfast choice?","ar":"أي زوج من الأطعمة ذُكر هنا كخيار إفطار شهير في الأردن؟"},"options":[{"en":"Kunafa and Baqlawa","ar":"الكنافة والبقلاوة"},{"en":"Zarb and Mansaf","ar":"الزرب والمنسف"},{"en":"Hummos and Falafel","ar":"الحمص والفلافل"},{"en":"Petra and Jerash","ar":"البتراء وجرش"}],"correctIndex":2,"imageUrl":"assets/food/hummos-falafel.jpg","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Hummos & Falafel","ar":"صورة الحمص والفلافل"},"fact":{"en":"a famous breakfast choice in Jordan, especially with hummos and falafel","ar":"خيار إفطار شهير في الأردن خاصة الحمص والفلافل"}}],"usesMap":false},{"id":"royal","icon":"👑","title":{"en":"Kings & Relatives","ar":"الملوك والعلاقات العائلية"},"intro":{"en":"Learn dignified, factual information about Jordan's Hashemite kings and close family relationships.","ar":"تعرّف إلى معلومات رصينة وموثّقة عن ملوك الأردن الهاشميين والعلاقات العائلية القريبة."},"items":[{"id":"abdullah-i","name":{"en":"Abdullah I","ar":"عبدالله الأول"},"icon":"👑","sourceIds":["king_abdullah_i","monarchs_official"],"text":{"en":"King Abdullah I is presented in official sources as the founding king of the Hashemite Kingdom of Jordan after independence in 1946.","ar":"تقدّم المصادر الرسمية الملك عبدالله الأول بوصفه الملك المؤسس للمملكة الأردنية الهاشمية بعد الاستقلال عام 1946."},"question":{"en":"Who was the founding king of the Hashemite Kingdom of Jordan?","ar":"من هو الملك المؤسس للمملكة الأردنية الهاشمية؟"},"options":[{"en":"King Talal","ar":"الملك طلال"},{"en":"King Abdullah I","ar":"الملك عبدالله الأول"},{"en":"King Hussein","ar":"الملك الحسين"},{"en":"King Abdullah II","ar":"الملك عبدالله الثاني"}],"correctIndex":1,"fact":{"en":"the founding king after independence in 1946","ar":"الملك المؤسس بعد الاستقلال عام 1946"},"imageUrl":"assets/royal/abdulla1.jpg","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Abdullah I","ar":"صورة عبدالله الأول"}},{"id":"talal","name":{"en":"Talal","ar":"طلال"},"icon":"📜","sourceIds":["monarchs_official","rhc_monarchs"],"text":{"en":"King Talal ruled Jordan from 1951 to 1952 and is remembered in Jordanian constitutional history.","ar":"حكم الملك طلال الأردن من عام 1951 إلى 1952، ويُذكر في التاريخ الدستوري الأردني."},"question":{"en":"Which king ruled Jordan from 1951 to 1952?","ar":"أي ملك حكم الأردن من 1951 إلى 1952؟"},"options":[{"en":"King Abdullah II","ar":"الملك عبدالله الثاني"},{"en":"King Talal","ar":"الملك طلال"},{"en":"King Abdullah I","ar":"الملك عبدالله الأول"},{"en":"Crown Prince Al Hussein","ar":"ولي العهد الأمير الحسين"}],"correctIndex":1,"fact":{"en":"a king who ruled Jordan from 1951 to 1952","ar":"ملك حكم الأردن من 1951 إلى 1952"},"imageUrl":"assets/royal/talal.jpg","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of King Talal","ar":"صورة الملك طلال"}},{"id":"hussein","name":{"en":"Hussein","ar":"الحسين"},"icon":"🕊️","sourceIds":["monarchs_official","rhc_monarchs"],"text":{"en":"King Hussein bin Talal ruled from 1952 to 1999 and is one of the central figures of modern Jordanian history.","ar":"حكم الملك الحسين بن طلال من 1952 إلى 1999، وهو من الشخصيات المحورية في تاريخ الأردن الحديث."},"question":{"en":"Which king ruled Jordan from 1952 to 1999?","ar":"أي ملك حكم الأردن من 1952 إلى 1999؟"},"options":[{"en":"King Abdullah I","ar":"الملك عبدالله الأول"},{"en":"King Talal","ar":"الملك طلال"},{"en":"King Hussein","ar":"الملك الحسين"},{"en":"King Abdullah II","ar":"الملك عبدالله الثاني"}],"correctIndex":2,"fact":{"en":"a king who ruled Jordan from 1952 to 1999","ar":"ملك حكم الأردن من 1952 إلى 1999"},"imageUrl":"assets/royal/kinghussain.jpg","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of King Hussein","ar":"صورة الملك الحسين"}},{"id":"abdullah-ii","name":{"en":"Abdullah II","ar":"عبدالله الثاني"},"icon":"🇯🇴","sourceIds":["king_abdullah_ii","monarchs_official"],"text":{"en":"King Abdullah II has been King of Jordan since 1999. His official biography states that he married Queen Rania in 1993.","ar":"يتولى الملك عبدالله الثاني عرش الأردن منذ عام 1999. وتذكر سيرته الرسمية أنه تزوج الملكة رانيا عام 1993."},"question":{"en":"Who is the current King of Jordan?","ar":"من هو ملك الأردن الحالي؟"},"options":[{"en":"King Abdullah II","ar":"الملك عبدالله الثاني"},{"en":"King Talal","ar":"الملك طلال"},{"en":"King Abdullah I","ar":"الملك عبدالله الأول"},{"en":"Queen Noor","ar":"الملكة نور"}],"correctIndex":0,"fact":{"en":"the current king since 1999 and husband of Queen Rania","ar":"الملك الحالي منذ عام 1999 وزوج الملكة رانيا"},"imageUrl":"assets/royal/abdulla2.jpg","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Abdullah II","ar":"صورة عبدالله الثاني"}},{"id":"queen-noor","name":{"en":"Queen Noor","ar":"الملكة نور"},"icon":"🌙","sourceIds":["queen_noor"],"text":{"en":"Queen Noor married King Hussein in 1978 and was widowed when King Hussein passed away in 1999.","ar":"تزوجت الملكة نور الملك الحسين عام 1978، وأصبحت أرملته عند وفاة الملك الحسين عام 1999."},"question":{"en":"Queen Noor was the wife of which king?","ar":"كانت الملكة نور زوجة أي ملك؟"},"options":[{"en":"King Abdullah I","ar":"الملك عبدالله الأول"},{"en":"King Abdullah II","ar":"الملك عبدالله الثاني"},{"en":"King Hussein","ar":"الملك الحسين"},{"en":"King Talal","ar":"الملك طلال"}],"correctIndex":2,"fact":{"en":"the wife of King Hussein, married in 1978","ar":"زوجة الملك الحسين وتزوجته عام 1978"},"imageUrl":"assets/royal/noor.jpg","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Queen Noor","ar":"صورة الملكة نور"}},{"id":"queen-rania","name":{"en":"Queen Rania","ar":"الملكة رانيا"},"icon":"🌹","sourceIds":["king_abdullah_ii"],"text":{"en":"Queen Rania is the wife of King Abdullah II. The official biography states that they married on 10 June 1993.","ar":"الملكة رانيا هي زوجة الملك عبدالله الثاني. وتذكر السيرة الرسمية أنهما تزوجا في 10 حزيران/يونيو 1993."},"question":{"en":"Queen Rania is the wife of which king?","ar":"الملكة رانيا زوجة أي ملك؟"},"options":[{"en":"King Abdullah II","ar":"الملك عبدالله الثاني"},{"en":"King Hussein","ar":"الملك الحسين"},{"en":"King Talal","ar":"الملك طلال"},{"en":"King Abdullah I","ar":"الملك عبدالله الأول"}],"correctIndex":0,"fact":{"en":"the wife of King Abdullah II, married in 1993","ar":"زوجة الملك عبدالله الثاني وتزوجته عام 1993"},"imageUrl":"assets/royal/rania.jpg","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Queen Rania","ar":"صورة الملكة رانيا"}},{"id":"crown-prince","name":{"en":"Crown Prince Al Hussein","ar":"ولي العهد الأمير الحسين"},"icon":"⭐","sourceIds":["crown_prince","king_abdullah_ii"],"text":{"en":"The current Crown Prince is Al Hussein bin Abdullah II, the eldest son of King Abdullah II and Queen Rania.","ar":"ولي العهد الحالي هو الأمير الحسين بن عبدالله الثاني، الابن الأكبر للملك عبدالله الثاني والملكة رانيا."},"question":{"en":"The current Crown Prince is the son of whom?","ar":"ولي العهد الحالي هو ابن من؟"},"options":[{"en":"King Talal and Queen Noor","ar":"الملك طلال والملكة نور"},{"en":"King Abdullah I","ar":"الملك عبدالله الأول"},{"en":"King Abdullah II and Queen Rania","ar":"الملك عبدالله الثاني والملكة رانيا"},{"en":"No relation to the royal family","ar":"لا صلة له بالعائلة الملكية"}],"correctIndex":2,"fact":{"en":"the eldest son of King Abdullah II and Queen Rania","ar":"الابن الأكبر للملك عبدالله الثاني والملكة رانيا"},"imageUrl":"assets/royal/princehussain.jpg","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Crown Prince Al Hussein","ar":"صورة ولي العهد الأمير الحسين"}}],"usesMap":false},{"id":"history","icon":"📜","title":{"en":"Jordan History","ar":"تاريخ الأردن"},"intro":{"en":"Key national facts: population, establishment, Independence Day, and Flag Day.","ar":"حقائق وطنية أساسية: السكان، التأسيس، عيد الاستقلال، ويوم العلم."},"items":[{"id":"population","name":{"en":"Population Count","ar":"عدد السكان"},"icon":"👥","sourceIds":["population_2025"],"text":{"en":"The July 2025 Jordan Demographic Indicators Sheet reported the current population size as 11.85 million.","ar":"أشارت ورقة المؤشرات الديموغرافية الأردنية لشهر تموز/يوليو 2025 إلى أن عدد السكان الحالي بلغ 11.85 مليون نسمة."},"question":{"en":"According to the July 2025 demographic sheet used here, Jordan's population was approximately:","ar":"بحسب ورقة المؤشرات الديموغرافية لشهر تموز/يوليو 2025 المستخدمة هنا، كم بلغ عدد سكان الأردن تقريباً؟"},"options":[{"en":"2 million","ar":"2 مليون"},{"en":"11.85 million","ar":"11.85 مليون"},{"en":"55 million","ar":"55 مليون"},{"en":"500 thousand","ar":"500 ألف"}],"correctIndex":1,"fact":{"en":"a July 2025 population value of about 11.85 million","ar":"قيمة سكانية في تموز/يوليو 2025 بلغت نحو 11.85 مليون"}},{"id":"established","name":{"en":"Year Established","ar":"سنة التأسيس"},"icon":"📅","sourceIds":["king_abdullah_i","monarchs_official"],"text":{"en":"For this activity, the key establishment year is 1946, when Jordan became an independent Hashemite kingdom and Abdullah I was proclaimed King.","ar":"في هذا النشاط تُستخدم سنة 1946 كسنة أساسية، إذ أصبح الأردن مملكة هاشمية مستقلة ونُصّب عبدالله الأول ملكاً."},"question":{"en":"Which year is used here as the key establishment year of the independent Hashemite Kingdom of Jordan?","ar":"ما السنة المستخدمة هنا كسنة أساسية لتأسيس المملكة الأردنية الهاشمية المستقلة؟"},"options":[{"en":"1999","ar":"1999"},{"en":"1921","ar":"1921"},{"en":"1946","ar":"1946"},{"en":"2009","ar":"2009"}],"correctIndex":2,"fact":{"en":"1946 as the key year for the independent Hashemite Kingdom","ar":"عام 1946 كسنة أساسية للمملكة الهاشمية المستقلة"}},{"id":"independence","name":{"en":"Independence Day","ar":"عيد الاستقلال"},"icon":"🎉","sourceIds":["king_abdullah_i"],"text":{"en":"Jordan celebrates Independence Day on 25 May, marking the country's independence in 1946.","ar":"يحتفل الأردن بعيد الاستقلال في 25 أيار/مايو، تخليداً لاستقلال البلاد عام 1946."},"question":{"en":"When is Jordan's Independence Day?","ar":"متى عيد استقلال الأردن؟"},"options":[{"en":"16 April","ar":"16 نيسان/أبريل"},{"en":"10 June","ar":"10 حزيران/يونيو"},{"en":"25 May","ar":"25 أيار/مايو"},{"en":"1 January","ar":"1 كانون الثاني/يناير"}],"correctIndex":2,"fact":{"en":"25 May as Jordan’s Independence Day","ar":"25 أيار/مايو عيداً لاستقلال الأردن"}},{"id":"flag-day","name":{"en":"Flag Day","ar":"يوم العلم"},"icon":"🇯🇴","sourceIds":["flag_day","flag_info"],"text":{"en":"Jordan Flag Day is marked on 16 April. The Jordanian flag carries black, white, green and red with a white seven-pointed star.","ar":"يوافق يوم العلم الأردني 16 نيسان/أبريل. ويحمل العلم الأردني ألوان الأسود والأبيض والأخضر والأحمر مع نجمة بيضاء سباعية."},"question":{"en":"When is Jordan Flag Day?","ar":"متى يوم العلم الأردني؟"},"options":[{"en":"16 April","ar":"16 نيسان/أبريل"},{"en":"25 May","ar":"25 أيار/مايو"},{"en":"9 June","ar":"9 حزيران/يونيو"},{"en":"30 January","ar":"30 كانون الثاني/يناير"}],"correctIndex":0,"fact":{"en":"16 April as Jordan Flag Day","ar":"16 نيسان/أبريل يوماً للعلم الأردني"}}],"usesMap":false},{"id":"places","icon":"🏛️","title":{"en":"Historical Places to Visit","ar":"أماكن تاريخية للزيارة"},"intro":{"en":"Explore serious, memorable places that introduce Jordan's history and landscapes.","ar":"استكشف أماكن مهمة ولافتة تعرّف بتاريخ الأردن ومناظره."},"items":[{"id":"jerash-place","name":{"en":"Jerash City","ar":"مدينة جرش"},"icon":"🏛️","sourceIds":["visit_jerash"],"text":{"en":"Jerash City is one of Jordan's most important archaeological destinations, known for Roman-era streets, theaters, plazas, and columns.","ar":"مدينة جرش من أهم الوجهات الأثرية في الأردن، وتشتهر بالشوارع والمدرجات والساحات والأعمدة من العصر الروماني."},"question":{"en":"Which place is known for Roman-era streets and theaters?","ar":"أي مكان يُعرف بالشوارع والمدرجات الرومانية؟"},"options":[{"en":"Petra","ar":"البتراء"},{"en":"Jerash City","ar":"مدينة جرش"},{"en":"Aqaba","ar":"العقبة"},{"en":"Wadi Rum","ar":"وادي رم"}],"correctIndex":1,"fact":{"en":"Roman-era streets, theaters, plazas, and columns","ar":"شوارع ومدرجات وساحات وأعمدة من العصر الروماني"},"imageUrl":"assets/places/jerash.jpg","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Jerash","ar":"صورة جرش"}},{"id":"umm-qais","name":{"en":"Um Qais","ar":"أم قيس"},"icon":"🏺","sourceIds":["visit_ummqais"],"text":{"en":"Um Qais, ancient Gadara, is known for Roman ruins and panoramic views over the Jordan Valley and the Sea of Galilee.","ar":"أم قيس، أو جدارا القديمة، تُعرف بآثارها الرومانية وإطلالاتها الواسعة على وادي الأردن وبحيرة طبريا."},"question":{"en":"Um Qais is also known as which ancient city?","ar":"بأي اسم أثري تُعرف أم قيس؟"},"options":[{"en":"Gadara","ar":"جدارا"},{"en":"Petra","ar":"البتراء"},{"en":"Aila","ar":"آيلة"},{"en":"Philadelphia","ar":"فيلادلفيا"}],"correctIndex":0,"fact":{"en":"ancient Gadara with Roman ruins and views over the Jordan Valley and the Sea of Galilee","ar":"جدارا القديمة بآثار رومانية وإطلالات على وادي الأردن وبحيرة طبريا"},"imageUrl":"assets/places/umqais.jpg","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Um Qais","ar":"صورة أم قيس"}},{"id":"petra","name":{"en":"Petra","ar":"البتراء"},"icon":"🌹","sourceIds":["visit_petra","whc_jordan"],"text":{"en":"Petra is Jordan's famous Nabataean rose-red city, known for rock-cut architecture such as the Treasury.","ar":"البتراء هي المدينة النبطية الوردية الشهيرة في الأردن، وتُعرف بعمارتها المنحوتة في الصخر مثل الخزنة."},"question":{"en":"Which place is famous for rose-red rock-cut Nabataean architecture?","ar":"أي مكان يشتهر بالعمارة النبطية الوردية المنحوتة في الصخر؟"},"options":[{"en":"Karak","ar":"الكرك"},{"en":"Petra","ar":"البتراء"},{"en":"Irbid","ar":"إربد"},{"en":"Az Zarqa","ar":"الزرقاء"}],"correctIndex":1,"fact":{"en":"rose-red Nabataean rock-cut architecture such as the Treasury","ar":"عمارة نبطية وردية منحوتة في الصخر مثل الخزنة"},"imageUrl":"assets/places/petra.jpg","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Petra","ar":"صورة البتراء"}},{"id":"wadi-rum","name":{"en":"Wadi Rum","ar":"وادي رم"},"icon":"🏜️","sourceIds":["visit_unesco","whc_jordan"],"text":{"en":"Wadi Rum is a protected desert landscape famous for red sand, dramatic sandstone formations, and Bedouin desert culture.","ar":"وادي رم منظر صحراوي محمي يشتهر بالرمال الحمراء والتكوينات الصخرية المهيبة والثقافة البدوية الصحراوية."},"question":{"en":"Which place is famous for red desert sand and dramatic rock formations?","ar":"أي مكان يشتهر بالرمال الصحراوية الحمراء والتكوينات الصخرية المهيبة؟"},"options":[{"en":"Madaba","ar":"مادبا"},{"en":"Um Qais","ar":"أم قيس"},{"en":"Wadi Rum","ar":"وادي رم"},{"en":"Amman","ar":"عمّان"}],"correctIndex":2,"fact":{"en":"red desert sand, sandstone formations, and Bedouin desert culture","ar":"رمال صحراوية حمراء وتكوينات صخرية وثقافة بدوية صحراوية"},"imageUrl":"assets/places/wadirum.jpg","imageCredit":"User-provided booth image","imageAlt":{"en":"Photo of Wadi Rum","ar":"صورة وادي رم"}}],"usesMap":false}],"translations":{"start":{"en":"Start the Journey","ar":"ابدأ الرحلة"},"chooseCategory":{"en":"Choose a category","ar":"اختر فئة"},"mapTitle":{"en":"Jordan Map","ar":"خريطة الأردن"},"mapSub":{"en":"Tap a governorate label on the map to start from that place.","ar":"اضغط على اسم محافظة في الخريطة لتبدأ منها."},"categoryMapSub":{"en":"Tap a map label or select a card below.","ar":"اضغط على اسم في الخريطة أو اختر بطاقة من الأسفل."},"defaultIntro":{"en":"Scan, explore the Jordan map, listen, answer, and collect your stamp.","ar":"امسح الرمز، استكشف خريطة الأردن، استمع، أجب، واجمع الختم."},"language":{"en":"Language","ar":"اللغة"},"english":{"en":"English","ar":"English"},"arabic":{"en":"Arabic","ar":"العربية"},"back":{"en":"Back","ar":"رجوع"},"home":{"en":"Home","ar":"الرئيسية"},"listen":{"en":"Listen","ar":"استمع"},"stop":{"en":"Stop","ar":"إيقاف الصوت"},"ready":{"en":"I’m ready for the question","ar":"أنا جاهز للسؤال"},"question":{"en":"Question","ar":"السؤال"},"submit":{"en":"Submit answer","ar":"إرسال الإجابة"},"correct":{"en":"Correct! Excellent answer.","ar":"صحيح! إجابة ممتازة."},"wrong":{"en":"Good try. The correct fact is:","ar":"محاولة جيدة. المعلومة الصحيحة هي:"},"next":{"en":"Choose another category","ar":"اختر فئة أخرى"},"sources":{"en":"Sources","ar":"المصادر"},"verified":{"en":"Verified source","ar":"مصدر موثّق"},"selectOne":{"en":"Please choose one answer.","ar":"يرجى اختيار إجابة واحدة."},"stamp":{"en":"Stamp collected","ar":"تم جمع الختم"},"progress":{"en":"Progress","ar":"التقدم"},"reset":{"en":"Reset","ar":"إعادة ضبط"},"speechWait":{"en":"Preparing voice...","ar":"جاري تجهيز الصوت..."},"speechIssue":{"en":"If you cannot hear the narration, check the phone volume or try another browser. The full text is visible.","ar":"إذا لم تسمع السرد، تحقق من مستوى صوت الهاتف أو جرّب متصفحاً آخر. النص الكامل ظاهر."},"arabicVoiceHint":{"en":"Arabic narration uses the phone/browser Arabic voice when available.","ar":"يستخدم السرد العربي صوت الهاتف/المتصفح العربي عند توفره."},"answerOrder":{"en":"Answer positions are mixed for the quiz.","ar":"يتم تغيير مواقع الإجابات في الاختبار."},"mapNote":{"en":"Map labels switch between English and Arabic.","ar":"تتغير أسماء الخريطة بين الإنجليزية والعربية."},"homeHeroTitle":{"en":"Discover Jordan","ar":"اكتشف الأردن"},"homeHeroText":{"en":"A quick cultural journey for the Jordan booth: choose a category, explore, listen, answer, and collect your stamp.","ar":"رحلة ثقافية سريعة لجناح الأردن: اختر فئة، استكشف، استمع، أجب، واجمع ختمك."},"startCities":{"en":"Start the Journey","ar":"ابدأ الرحلة"},"startFood":{"en":"","ar":""},"cityMapExactNote":{"en":"","ar":""},"hoverMapHelp":{"en":"Hover over a governorate to see its full name and a short fact. Tap it to start.","ar":"مرّر فوق المحافظة لعرض اسمها الكامل ومعلومة قصيرة. اضغط عليها للبدء."},"newQuestion":{"en":"New question","ar":"سؤال جديد"},"anotherQuestion":{"en":"Try another question","ar":"جرّب سؤالاً آخر"},"questionPool":{"en":"A new question is selected each time.","ar":"يتم اختيار سؤال جديد في كل مرة."}},"assets":{"mapClean":"assets/jordan-map-clean-base.png","mapOriginal":"assets/jordan-map-original-user.png","homeFlagMap":"assets/jordan-flag-map-background.png","cityMapEnglish":"assets/jordan-map-exact-interactive.png","cityMapArabic":"assets/jordan-map-exact-interactive.png","cityMapExact":"assets/jordan-map-exact-interactive.png"}};
+    </script>
+    <script>
+      (function () {
+        const DATA = window.APP_DATA;
+        const app = document.getElementById("app");
+        const LS_LANG = "jq.final.lang";
+        const LS_STAMPS = "jq.final.stamps";
+        const state = {
+          lang: localStorage.getItem(LS_LANG) || "en",
+          screen: "home",
+          categoryId: null,
+          itemId: null,
+          quiz: null,
+          selected: null,
+          result: null,
+          usedQuestions: {},
+          stamps: JSON.parse(localStorage.getItem(LS_STAMPS) || "[]"),
+        };
+
+        const byId = (arr, id) => arr.find((x) => x.id === id);
+        const L = (obj) => (obj ? obj[state.lang] || obj.en || "" : "");
+        const T = (key) => L(DATA.translations[key]);
+        const currentCategory = () =>
+          byId(DATA.categories, state.categoryId) || DATA.categories[0];
+        const currentItem = () =>
+          byId(currentCategory().items, state.itemId) ||
+          currentCategory().items[0];
+
+        function setDocumentLang() {
+          document.documentElement.lang = state.lang === "ar" ? "ar" : "en";
+          document.documentElement.dir = state.lang === "ar" ? "rtl" : "ltr";
+        }
+
+        window.setLang = function (lang) {
+          state.lang = lang;
+          localStorage.setItem(LS_LANG, lang);
+          setDocumentLang();
+          render();
+        };
+
+        window.goHome = function () {
+          stopVoice();
+          Object.assign(state, {
+            screen: "home",
+            categoryId: null,
+            itemId: null,
+            quiz: null,
+            selected: null,
+            result: null,
+          });
+          render();
+        };
+
+        window.resetApp = function () {
+          stopVoice();
+          state.stamps = [];
+          localStorage.removeItem(LS_STAMPS);
+          window.goHome();
+        };
+
+        window.openCategory = function (categoryId, itemId) {
+          stopVoice();
+          const cat = byId(DATA.categories, categoryId);
+          Object.assign(state, {
+            screen: "category",
+            categoryId,
+            itemId: itemId || cat.items[0].id,
+            quiz: null,
+            selected: null,
+            result: null,
+          });
+          render();
+        };
+
+        window.selectItem = function (itemId) {
+          stopVoice();
+          Object.assign(state, {
+            itemId,
+            quiz: null,
+            selected: null,
+            result: null,
+            screen: "category",
+          });
+          render();
+        };
+
+        function shuffleArray(arr) {
+          const out = arr.slice();
+          for (let i = out.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [out[i], out[j]] = [out[j], out[i]];
+          }
+          return out;
+        }
+
+        function buildQuestionPool(cat) {
+          const pools = [];
+          cat.items.forEach((item) => {
+            const others = shuffleArray(
+              cat.items.filter((x) => x.id !== item.id),
+            );
+            const otherNames = others.slice(0, 3).map((x) => x.name);
+            const otherFacts = others
+              .filter((x) => x.fact)
+              .slice(0, 3)
+              .map((x) => x.fact);
+
+            // Main item-specific MCQ.
+            pools.push({
+              id: `${cat.id}-${item.id}-main`,
+              question: item.question,
+              options: item.options.map((opt, i) => ({
+                text: opt,
+                correct: i === item.correctIndex,
+              })),
+            });
+
+            // Fact question about this specific item.
+            if (item.fact && otherFacts.length >= 3) {
+              pools.push({
+                id: `${cat.id}-${item.id}-fact`,
+                question: {
+                  en: `What specific fact was mentioned about “${item.name.en}”?`,
+                  ar: `ما المعلومة المحددة التي ذُكرت عن «${item.name.ar}»؟`,
+                },
+                options: shuffleArray([
+                  { text: item.fact, correct: true },
+                  ...otherFacts.map((f) => ({ text: f, correct: false })),
+                ]),
+              });
+            }
+
+            // Clue question based on the item’s information.
+            if (item.fact && otherNames.length >= 3) {
+              pools.push({
+                id: `${cat.id}-${item.id}-clue`,
+                question: {
+                  en: `Which item matches this clue: ${item.fact.en}?`,
+                  ar: `أي عنصر تنطبق عليه هذه المعلومة: ${item.fact.ar}؟`,
+                },
+                options: shuffleArray([
+                  { text: item.name, correct: true },
+                  ...otherNames.map((n) => ({ text: n, correct: false })),
+                ]),
+              });
+            }
+          });
+          return pools;
+        }
+
+        function pickNewQuestion(cat) {
+          const pool = buildQuestionPool(cat);
+          if (!state.usedQuestions[cat.id]) state.usedQuestions[cat.id] = [];
+          let available = pool.filter(
+            (q) => !state.usedQuestions[cat.id].includes(q.id),
+          );
+          if (available.length === 0) {
+            state.usedQuestions[cat.id] = [];
+            available = pool;
+          }
+          const picked =
+            available[Math.floor(Math.random() * available.length)];
+          state.usedQuestions[cat.id].push(picked.id);
+          picked.options = shuffleArray(picked.options);
+          return picked;
+        }
+
+        window.readyQuestion = function () {
+          stopVoice();
+          state.quiz = pickNewQuestion(currentCategory());
+          state.selected = null;
+          state.result = null;
+          state.screen = "question";
+          render();
+        };
+
+        window.selectOption = function (i) {
+          state.selected = i;
+          document
+            .querySelectorAll(".option")
+            .forEach((el, idx) => el.classList.toggle("selected", idx === i));
+        };
+
+        window.submitAnswer = function () {
+          if (state.selected === null || state.selected === undefined) {
+            toast(T("selectOne"));
+            return;
+          }
+          const correct = !!state.quiz.options[state.selected].correct;
+          state.result = { correct };
+          const catId = state.categoryId;
+          if (correct && !state.stamps.includes(catId)) {
+            state.stamps.push(catId);
+            localStorage.setItem(LS_STAMPS, JSON.stringify(state.stamps));
+          }
+          correct ? playSuccess() : playWrong();
+          if (correct) confetti();
+          state.screen = "result";
+          render();
+        };
+
+        window.stopVoice = stopVoice;
+
+        function header() {
+          return `
+      <header class="topbar">
+        <button class="brand" onclick="goHome()" aria-label="Home">
+          <span class="flag" aria-hidden="true"></span>
+          <span>Jordan Quest <small>رحلة الثقافة الأردنية</small></span>
+        </button>
+        <div class="actions-top">
+          <div class="lang" aria-label="${T("language")}">
+            <button class="${state.lang === "en" ? "active" : ""}" onclick="setLang('en')">${T("english")}</button>
+            <button class="${state.lang === "ar" ? "active" : ""}" onclick="setLang('ar')">${T("arabic")}</button>
+          </div>
+          <button class="btn ghost" onclick="resetApp()">${T("reset")}</button>
+        </div>
+      </header>`;
+        }
+
+        function progress() {
+          return `<div class="progress" aria-label="${T("progress")}">
+      ${DATA.categories.map((c) => `<span class="${state.stamps.includes(c.id) ? "done" : ""}" title="${L(c.title)}">${c.icon}</span>`).join("")}
+    </div>`;
+        }
+
+        function mapComponent(activeId = "", compact = false) {
+          const cities = byId(DATA.categories, "cities").items;
+          return `<div class="map-wrap exact-city-map" role="region" aria-label="${T("mapTitle")}">
+      <img src="${DATA.assets.cityMapExact}" alt="${T("mapTitle")}" />
+      ${cities
+        .map(
+          (item) => `
+        <button type="button" class="hotspot exact-hotspot ${activeId === item.id ? "active" : ""}"
+          style="--x:${item.zone?.x ?? item.x}%;--y:${item.zone?.y ?? item.y}%;--w:${item.zone?.w ?? 7.2}%;--h:${item.zone?.h ?? 6}%"
+          onclick="event.preventDefault(); event.stopPropagation(); openCategory('cities','${item.id}')"
+          aria-label="${L(item.name)}" title="${L(item.name)}">
+          <span class="hover-card city-name-only">${L(item.name)}</span>
+        </button>
+      `,
+        )
+        .join("")}
+    </div>`;
+        }
+
+        function home() {
+          return `<main>
+      <section class="home-hero clean-home">
+        <img class="home-map-bg" src="${DATA.assets.homeFlagMap}" alt="" aria-hidden="true" />
+        <div class="home-glow" aria-hidden="true"></div>
+        <div class="home-content">
+          <div class="home-kicker">🇯🇴 Jordan Culture Booth</div>
+          <h1>Jordan Quest</h1>
+          <h2>رحلة الثقافة الأردنية</h2>
+          <p>${T("homeHeroText")}</p>
+          <div class="home-actions">
+            <button class="btn primary" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">${T("startCities")}</button>
+          </div>
+        </div>
+        <div class="home-info-card compact-progress">
+          <strong>${T("progress")}</strong>
+          ${progress()}
+        </div>
+      </section>
+
+      <section id="categories" class="section-head"><div><h2>${T("chooseCategory")}</h2></div></section>
+      <section class="category-grid">
+        ${DATA.categories
+          .map(
+            (
+              c,
+            ) => `<button class="card ${state.stamps.includes(c.id) ? "done" : ""}" onclick="openCategory('${c.id}')">
+          <span class="icon">${c.icon}</span><strong>${L(c.title)}</strong><small>${L(c.intro)}</small>
+        </button>`,
+          )
+          .join("")}
+      </section>
+    </main>`;
+        }
+
+        function category() {
+          const cat = currentCategory();
+          const item = currentItem();
+          const sourceNames = item.sourceIds
+            .map((id) => DATA.sources[id]?.name || id)
+            .join(" · ");
+          return `<main>
+      <button class="btn back-button" onclick="goHome()">← ${T("back")}</button>
+      <section class="section-head">
+        <div><h2>${cat.icon} ${L(cat.title)}</h2><p>${L(cat.intro)}</p></div>
+        ${progress()}
+      </section>
+
+      <section class="category-layout">
+        ${cat.usesMap ? `<section class="map-panel"><p style="margin:0 0 12px;color:var(--muted);font-weight:900">${T("hoverMapHelp")}</p>${mapComponent(item.id)}</section>` : `<section class="panel"><h2>${cat.icon}</h2><p>${L(cat.intro)}</p><p class="source-line">${T("questionPool")}</p></section>`}
+        <section class="panel">
+          <h2>${L(item.name)}</h2>
+          <div class="item-feature ${currentCategory().id === "food" ? "food-feature" : currentCategory().id === "royal" ? "royal-feature" : currentCategory().id === "places" ? "places-feature" : ""}">
+            ${(currentCategory().id === "food" || currentCategory().id === "royal" || currentCategory().id === "places") && item.imageUrl ? `<img class="food-photo" src="${item.imageUrl}" alt="${L(item.imageAlt)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" />` : ""}
+            <span class="big-icon ${(currentCategory().id === "food" || currentCategory().id === "royal" || currentCategory().id === "places") && item.imageUrl ? "food-photo-fallback" : ""}">${item.icon}</span>
+            <div>
+              <p>${L(item.text)}</p>
+            </div>
+          </div>
+          <div class="controls">
+            <button class="btn primary" onclick="readyQuestion()">${T("ready")}</button>
+          </div>
+        </section>
+      </section>
+
+      <section class="items-grid">
+        ${cat.items
+          .map(
+            (it) => `<button class="item-card" onclick="selectItem('${it.id}')">
+          <span class="icon">${it.icon}</span><strong>${L(it.name)}</strong><small>${L(it.text)}</small>
+        </button>`,
+          )
+          .join("")}
+      </section>
+    </main>`;
+        }
+
+        function question() {
+          const item = currentItem();
+          if (!state.quiz) state.quiz = shuffledQuestion(item);
+          return `<main>
+      <section class="question-panel">
+        <button class="btn back-button" onclick="openCategory('${state.categoryId}','${state.itemId}')">← ${T("back")}</button>
+        <h2>${T("question")}: ${L(state.quiz.question)}</h2>
+        <div class="options">
+          ${state.quiz.options
+            .map(
+              (
+                opt,
+                idx,
+              ) => `<button class="option" onclick="selectOption(${idx})">
+            <span class="letter">${String.fromCharCode(65 + idx)}</span><span>${L(opt.text)}</span>
+          </button>`,
+            )
+            .join("")}
+        </div>
+        <div class="controls"><button class="btn primary" onclick="submitAnswer()">${T("submit")}</button></div>
+      </section>
+    </main>`;
+        }
+
+        function result() {
+          const item = currentItem();
+          const correct = !!state.result?.correct;
+          const correctOpt = state.quiz.options.find((o) => o.correct);
+          return `<main>
+      <section class="result-panel">
+        <div class="result-symbol">${correct ? "🇯🇴" : "💡"}</div>
+        <h2>${correct ? T("correct") : T("wrong")}</h2>
+        <p>${correct ? L(item.text) : `${L(correctOpt.text)} — ${L(item.text)}`}</p>
+        ${correct ? `<div class="stamp">${T("stamp")} · ${L(currentCategory().title)}</div>` : ""}
+        <div class="controls" style="justify-content:center">
+          <button class="btn primary" onclick="readyQuestion()">${T("anotherQuestion")}</button>
+          <button class="btn secondary" onclick="goHome()">${T("next")}</button>
+          <button class="btn back-button" onclick="openCategory('${state.categoryId}','${state.itemId}')">${T("back")}</button>
+        </div>
+      </section>
+    </main>`;
+        }
+
+        function render() {
+          setDocumentLang();
+          app.innerHTML = `<div class="shell">${header()}${state.screen === "home" ? home() : state.screen === "category" ? category() : state.screen === "question" ? question() : result()}</div>`;
+        }
+
+        function stopVoice() {}
+
+        function toast(msg) {
+          const old = document.querySelector(".toast");
+          if (old) old.remove();
+          const el = document.createElement("div");
+          el.className = "toast";
+          el.textContent = msg;
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 2600);
+        }
+
+        function tone(freq, duration, delay = 0, type = "sine") {
+          try {
+            const Ctx = window.AudioContext || window.webkitAudioContext;
+            const ctx = new Ctx();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = type;
+            osc.frequency.value = freq;
+            gain.gain.value = 0.045;
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            const now = ctx.currentTime + delay;
+            osc.start(now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+            osc.stop(now + duration + 0.03);
+          } catch (e) {}
+        }
+        function playSuccess() {
+          tone(523, 0.12, 0);
+          tone(659, 0.14, 0.12);
+          tone(784, 0.18, 0.25, "triangle");
+        }
+        function playWrong() {
+          tone(392, 0.11, 0);
+          tone(330, 0.16, 0.14);
+        }
+
+        function confetti() {
+          const layer = document.createElement("div");
+          layer.className = "confetti";
+          const colors = ["#CE1126", "#111111", "#007A3D", "#FFFFFF"];
+          for (let i = 0; i < 80; i++) {
+            const p = document.createElement("span");
+            p.style.left = Math.random() * 100 + "%";
+            p.style.background = colors[i % colors.length];
+            p.style.animationDelay = Math.random() * 0.65 + "s";
+            p.style.transform = `rotate(${Math.random() * 360}deg)`;
+            layer.appendChild(p);
+          }
+          document.body.appendChild(layer);
+          setTimeout(() => layer.remove(), 3200);
+        }
+
+        render();
+      })();
+    </script>
+  </body>
+</html>
