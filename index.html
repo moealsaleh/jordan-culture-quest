@@ -330,13 +330,40 @@
       }
 
 
-      /* === PATCH: category opening should land at the beginning/top === */
-      #category-page-top {
-        scroll-margin-top: 150px !important;
+      /* === PATCH: pinned header order = language/reset, progress, back === */
+      .jq-sticky-topbar {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+      }
+      .jq-header-actions {
+        order: 1 !important;
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+      }
+      .jq-header-progress {
+        order: 2 !important;
+        width: 100% !important;
+        justify-content: center !important;
+      }
+      .jq-back-row {
+        order: 3 !important;
+        width: 100% !important;
+        justify-content: flex-start !important;
+      }
+      .jq-back-row .brand {
+        flex: 1 1 auto !important;
       }
       @media (max-width: 760px) {
-        #category-page-top {
-          scroll-margin-top: 215px !important;
+        .jq-header-actions {
+          justify-content: space-between !important;
+        }
+        .jq-back-row {
+          justify-content: flex-start !important;
         }
       }
 
@@ -461,7 +488,6 @@
             result: null,
           });
           render();
-          scrollToCategoryTop();
           pushAppHistory();
         };
 
@@ -502,16 +528,7 @@
           });
           render();
           pushAppHistory();
-          scrollToCategoryTop();
         };
-
-        function scrollToCategoryTop() {
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-            });
-          });
-        }
 
         function scrollToItemExplanation() {
           requestAnimationFrame(() => {
@@ -627,7 +644,6 @@
           state.screen = "question";
           render();
           pushAppHistory();
-          scrollToCategoryTop();
         };
 
         window.selectOption = function (i) {
@@ -654,7 +670,6 @@
           state.screen = "result";
           render();
           pushAppHistory();
-          scrollToCategoryTop();
         };
 
         window.stopVoice = stopVoice;
@@ -662,23 +677,25 @@
         function header() {
           return `
       <header class="topbar jq-sticky-topbar">
-        <div class="jq-topbar-row">
-          <button class="btn back-button jq-header-back" onclick="goBack()" type="button">← ${T("back")}</button>
-          <button class="brand" onclick="goHome()" aria-label="Home" type="button">
-            <span class="flag" aria-hidden="true"></span>
-            <span>Jordan Quest <small>رحلة الثقافة الأردنية</small></span>
-          </button>
-        </div>
-        <div class="jq-header-progress" aria-label="${T("progress")}">
-          <strong class="jq-progress-label">${T("progress")}</strong>
-          ${progress()}
-        </div>
-        <div class="actions-top">
+        <div class="actions-top jq-header-actions">
           <div class="lang" aria-label="${T("language")}">
             <button class="${state.lang === "en" ? "active" : ""}" onclick="setLang('en')" type="button">${T("english")}</button>
             <button class="${state.lang === "ar" ? "active" : ""}" onclick="setLang('ar')" type="button">${T("arabic")}</button>
           </div>
           <button class="btn ghost" onclick="resetApp()" type="button">${T("reset")}</button>
+        </div>
+
+        <div class="jq-header-progress" aria-label="${T("progress")}">
+          <strong class="jq-progress-label">${T("progress")}</strong>
+          ${progress()}
+        </div>
+
+        <div class="jq-topbar-row jq-back-row">
+          <button class="btn back-button jq-header-back" onclick="goBack()" type="button">← ${T("back")}</button>
+          <button class="brand" onclick="goHome()" aria-label="Home" type="button">
+            <span class="flag" aria-hidden="true"></span>
+            <span>Jordan Quest <small>رحلة الثقافة الأردنية</small></span>
+          </button>
         </div>
       </header>`;
         }
@@ -745,7 +762,7 @@
           const sourceNames = item.sourceIds
             .map((id) => DATA.sources[id]?.name || id)
             .join(" · ");
-          return `<main id="category-page-top">
+          return `<main>
       <section class="section-head">
         <div><h2>${cat.icon} ${L(cat.title)}</h2><p>${L(cat.intro)}</p></div>
       </section>
