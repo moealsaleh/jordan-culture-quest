@@ -167,6 +167,168 @@
         }
       }
 
+
+      /* === PATCH: always-visible back/progress header + mobile browser-back guard === */
+      .jq-sticky-topbar {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 99999 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        flex-wrap: wrap !important;
+        padding: 10px 12px !important;
+        background: rgba(255, 255, 255, 0.98) !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.10) !important;
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+        overflow: visible !important;
+      }
+      .jq-topbar-row {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+      }
+      .jq-header-back {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        white-space: nowrap !important;
+        min-height: 40px !important;
+        padding: 10px 14px !important;
+        flex: 0 0 auto !important;
+      }
+      .jq-sticky-topbar .brand {
+        display: inline-flex !important;
+        align-items: center !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        min-width: 0 !important;
+      }
+      .jq-header-progress {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        min-height: 40px !important;
+        padding: 6px 10px !important;
+        border-radius: 999px !important;
+        background: #ffffff !important;
+        border: 1px solid rgba(0, 0, 0, 0.12) !important;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07) !important;
+        flex: 0 0 auto !important;
+      }
+      .jq-progress-label {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        font-size: 12px !important;
+        font-weight: 900 !important;
+        color: var(--muted, #4b5563) !important;
+        white-space: nowrap !important;
+      }
+      .jq-progress-icons {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 5px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .jq-progress-pill {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 28px !important;
+        height: 28px !important;
+        min-width: 28px !important;
+        border-radius: 999px !important;
+        font-size: 15px !important;
+        line-height: 1 !important;
+        background: #f3f4f6 !important;
+        border: 1px solid rgba(0, 0, 0, 0.10) !important;
+        filter: grayscale(0.15) !important;
+      }
+      .jq-progress-pill.done {
+        background: #dcfce7 !important;
+        border-color: #16a34a !important;
+        box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.16) !important;
+        filter: none !important;
+      }
+      .jq-sticky-topbar .actions-top {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        flex: 0 0 auto !important;
+      }
+      #item-explanation-panel {
+        scroll-margin-top: 160px !important;
+      }
+      html {
+        scroll-padding-top: 160px !important;
+      }
+      @media (max-width: 760px) {
+        .jq-sticky-topbar {
+          flex-direction: column !important;
+          align-items: stretch !important;
+          gap: 7px !important;
+          padding: 8px !important;
+        }
+        .jq-topbar-row {
+          width: 100% !important;
+        }
+        .jq-header-back {
+          min-width: 76px !important;
+          padding: 9px 10px !important;
+        }
+        .jq-sticky-topbar .brand {
+          flex: 1 1 auto !important;
+          overflow: hidden !important;
+        }
+        .jq-sticky-topbar .brand > span:last-child {
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+          white-space: nowrap !important;
+        }
+        .jq-header-progress {
+          width: 100% !important;
+          justify-content: center !important;
+          order: 2 !important;
+        }
+        .jq-progress-pill {
+          width: 26px !important;
+          height: 26px !important;
+          min-width: 26px !important;
+          font-size: 14px !important;
+        }
+        .jq-sticky-topbar .actions-top {
+          width: 100% !important;
+          justify-content: space-between !important;
+          order: 3 !important;
+        }
+        #item-explanation-panel {
+          scroll-margin-top: 220px !important;
+        }
+        html {
+          scroll-padding-top: 220px !important;
+        }
+      }
+
     </style>
   </head>
   <body>
@@ -206,6 +368,70 @@
           document.documentElement.dir = state.lang === "ar" ? "rtl" : "ltr";
         }
 
+
+        let restoringFromBrowserHistory = false;
+        let browserHistoryReady = false;
+
+        function currentAppHistoryState() {
+          return {
+            jqApp: true,
+            screen: state.screen,
+            categoryId: state.categoryId,
+            itemId: state.itemId,
+            quiz: state.quiz,
+            selected: state.selected,
+            result: state.result,
+          };
+        }
+
+        function pushAppHistory(replace = false) {
+          if (!window.history || restoringFromBrowserHistory) return;
+          try {
+            const snapshot = currentAppHistoryState();
+            if (replace || !browserHistoryReady) {
+              window.history.replaceState(snapshot, "", window.location.href);
+              browserHistoryReady = true;
+            } else {
+              window.history.pushState(snapshot, "", window.location.href);
+            }
+          } catch (e) {}
+        }
+
+        function restoreAppHistoryState(snapshot) {
+          if (!snapshot || snapshot.jqApp !== true) return false;
+          stopVoice();
+          Object.assign(state, {
+            screen: snapshot.screen || "home",
+            categoryId: snapshot.categoryId || null,
+            itemId: snapshot.itemId || null,
+            quiz: snapshot.quiz || null,
+            selected:
+              snapshot.selected === undefined || snapshot.selected === null
+                ? null
+                : snapshot.selected,
+            result: snapshot.result || null,
+          });
+          render();
+          return true;
+        }
+
+        function initBrowserBackGuard() {
+          pushAppHistory(true);
+          try {
+            window.history.pushState(currentAppHistoryState(), "", window.location.href);
+          } catch (e) {}
+          window.addEventListener("popstate", (event) => {
+            restoringFromBrowserHistory = true;
+            const handled = restoreAppHistoryState(event.state);
+            restoringFromBrowserHistory = false;
+
+            // Keep the booth app open on mobile if Android/iOS browser Back is pressed at Home.
+            if (!handled || state.screen === "home") {
+              setTimeout(() => pushAppHistory(false), 0);
+            }
+          });
+        }
+
         window.setLang = function (lang) {
           state.lang = lang;
           localStorage.setItem(LS_LANG, lang);
@@ -224,6 +450,7 @@
             result: null,
           });
           render();
+          pushAppHistory();
         };
 
         window.resetApp = function () {
@@ -262,6 +489,7 @@
             result: null,
           });
           render();
+          pushAppHistory();
         };
 
         function scrollToItemExplanation() {
@@ -285,6 +513,7 @@
             screen: "category",
           });
           render();
+          pushAppHistory();
           scrollToItemExplanation();
         };
 
@@ -376,6 +605,7 @@
           state.result = null;
           state.screen = "question";
           render();
+          pushAppHistory();
         };
 
         window.selectOption = function (i) {
@@ -401,30 +631,38 @@
           if (correct) confetti();
           state.screen = "result";
           render();
+          pushAppHistory();
         };
 
         window.stopVoice = stopVoice;
 
         function header() {
           return `
-      <header class="topbar">
-        <button class="brand" onclick="goHome()" aria-label="Home">
-          <span class="flag" aria-hidden="true"></span>
-          <span>Jordan Quest <small>رحلة الثقافة الأردنية</small></span>
-        </button>
+      <header class="topbar jq-sticky-topbar">
+        <div class="jq-topbar-row">
+          <button class="btn back-button jq-header-back" onclick="goBack()" type="button">← ${T("back")}</button>
+          <button class="brand" onclick="goHome()" aria-label="Home" type="button">
+            <span class="flag" aria-hidden="true"></span>
+            <span>Jordan Quest <small>رحلة الثقافة الأردنية</small></span>
+          </button>
+        </div>
+        <div class="jq-header-progress" aria-label="${T("progress")}">
+          <strong class="jq-progress-label">${T("progress")}</strong>
+          ${progress()}
+        </div>
         <div class="actions-top">
           <div class="lang" aria-label="${T("language")}">
-            <button class="${state.lang === "en" ? "active" : ""}" onclick="setLang('en')">${T("english")}</button>
-            <button class="${state.lang === "ar" ? "active" : ""}" onclick="setLang('ar')">${T("arabic")}</button>
+            <button class="${state.lang === "en" ? "active" : ""}" onclick="setLang('en')" type="button">${T("english")}</button>
+            <button class="${state.lang === "ar" ? "active" : ""}" onclick="setLang('ar')" type="button">${T("arabic")}</button>
           </div>
-          <button class="btn ghost" onclick="resetApp()">${T("reset")}</button>
+          <button class="btn ghost" onclick="resetApp()" type="button">${T("reset")}</button>
         </div>
       </header>`;
         }
 
         function progress() {
-          return `<div class="progress" aria-label="${T("progress")}">
-      ${DATA.categories.map((c) => `<span class="${state.stamps.includes(c.id) ? "done" : ""}" title="${L(c.title)}">${c.icon}</span>`).join("")}
+          return `<div class="jq-progress-icons" aria-label="${T("progress")}">
+      ${DATA.categories.map((c) => `<span class="jq-progress-pill ${state.stamps.includes(c.id) ? "done" : ""}" title="${L(c.title)}">${c.icon}</span>`).join("")}
     </div>`;
         }
 
@@ -620,6 +858,7 @@
         }
 
         render();
+        initBrowserBackGuard();
       })();
     </script>
   </body>
