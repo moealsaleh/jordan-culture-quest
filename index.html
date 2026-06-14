@@ -340,6 +340,66 @@
         }
       }
 
+
+      /* === FINAL PATCH: Back button must stay at the bottom of the pinned header === */
+      .jq-sticky-topbar {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+      }
+      .jq-sticky-topbar .jq-header-actions {
+        order: 1 !important;
+        display: flex !important;
+        width: 100% !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+      }
+      .jq-sticky-topbar .jq-header-progress {
+        order: 2 !important;
+        display: flex !important;
+        width: 100% !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      .jq-sticky-topbar .jq-brand-row {
+        order: 3 !important;
+        display: flex !important;
+        width: 100% !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+      }
+      .jq-sticky-topbar .jq-brand-row .brand {
+        width: 100% !important;
+        justify-content: flex-start !important;
+      }
+      .jq-sticky-topbar .jq-back-row {
+        order: 4 !important;
+        display: flex !important;
+        width: 100% !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+      }
+      .jq-sticky-topbar .jq-back-row .jq-header-back {
+        display: inline-flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: static !important;
+        order: 1 !important;
+        white-space: nowrap !important;
+      }
+      @media (max-width: 760px) {
+        .jq-sticky-topbar .jq-header-actions {
+          justify-content: space-between !important;
+        }
+        .jq-sticky-topbar .jq-brand-row,
+        .jq-sticky-topbar .jq-back-row,
+        .jq-sticky-topbar .jq-header-progress {
+          width: 100% !important;
+        }
+      }
+
     </style>
   </head>
   <body>
@@ -662,23 +722,28 @@
         function header() {
           return `
       <header class="topbar jq-sticky-topbar">
-        <div class="jq-topbar-row">
-          <button class="btn back-button jq-header-back" onclick="goBack()" type="button">← ${T("back")}</button>
-          <button class="brand" onclick="goHome()" aria-label="Home" type="button">
-            <span class="flag" aria-hidden="true"></span>
-            <span>Jordan Quest <small>رحلة الثقافة الأردنية</small></span>
-          </button>
-        </div>
-        <div class="jq-header-progress" aria-label="${T("progress")}">
-          <strong class="jq-progress-label">${T("progress")}</strong>
-          ${progress()}
-        </div>
-        <div class="actions-top">
+        <div class="jq-header-actions">
           <div class="lang" aria-label="${T("language")}">
             <button class="${state.lang === "en" ? "active" : ""}" onclick="setLang('en')" type="button">${T("english")}</button>
             <button class="${state.lang === "ar" ? "active" : ""}" onclick="setLang('ar')" type="button">${T("arabic")}</button>
           </div>
           <button class="btn ghost" onclick="resetApp()" type="button">${T("reset")}</button>
+        </div>
+
+        <div class="jq-header-progress" aria-label="${T("progress")}">
+          <strong class="jq-progress-label">${T("progress")}</strong>
+          ${progress()}
+        </div>
+
+        <div class="jq-brand-row">
+          <button class="brand" onclick="goHome()" aria-label="Home" type="button">
+            <span class="flag" aria-hidden="true"></span>
+            <span>Jordan Quest <small>رحلة الثقافة الأردنية</small></span>
+          </button>
+        </div>
+
+        <div class="jq-back-row">
+          <button class="btn back-button jq-header-back" onclick="goBack()" type="button">← ${T("back")}</button>
         </div>
       </header>`;
         }
