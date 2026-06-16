@@ -439,6 +439,12 @@
         }
       }
 
+
+      /* === PATCH: hide Back on initial Home page, show only after navigation === */
+      .jq-sticky-topbar .jq-back-row:empty {
+        display: none !important;
+      }
+
     </style>
   </head>
   <body>
@@ -759,6 +765,14 @@
         window.clearAudioState = clearAudioState;
 
         function header() {
+          const backRow =
+            state.screen === "home"
+              ? ""
+              : `
+        <div class="jq-back-row">
+          <button class="btn back-button jq-header-back" onclick="goBack()" type="button">← ${T("back")}</button>
+        </div>`;
+
           return `
       <header class="topbar jq-sticky-topbar">
         <div class="jq-header-actions">
@@ -781,9 +795,7 @@
           </button>
         </div>
 
-        <div class="jq-back-row">
-          <button class="btn back-button jq-header-back" onclick="goBack()" type="button">← ${T("back")}</button>
-        </div>
+        ${backRow}
       </header>`;
         }
 
